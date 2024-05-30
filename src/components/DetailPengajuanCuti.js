@@ -34,7 +34,9 @@ const DetailPengajuanCuti = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen font-Poppins">
+    <div className="bg-gray-100 min-h-screen font-Poppins my-auto
+    
+    ">
       <h1 className="text-3xl font-bold text-center mb-8 pt-8">
         Detail Pengajuan Cuti
       </h1>
@@ -89,7 +91,7 @@ const DetailPengajuanCuti = () => {
       <div className="flex items-center justify-center">
       <button
         onClick={handleBack}
-        className="mt-6 py-2 px-8 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+        className="my-6 py-2 px-8 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
       >
         Done
       </button>
