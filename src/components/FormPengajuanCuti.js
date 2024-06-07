@@ -2,40 +2,47 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const FormPengajuanCuti = ({ setFormData }) => {
-  const {
-    nama,
-    nip,
-    jabatan,
-    masaKerja,
-    unitKerja,
-    alamat,
-    noTelp,
-    jumlahCutiTahunan,
-  } = useParams();
-
+  const { nama, unitKerja, jumlahCutiTahunan } = useParams();
   const navigate = useNavigate();
 
+  // Daftar tanggal merah atau hari libur
+  const tanggalMerah = [
+    //Juni
+    "2024-06-17",
+    "2024-06-18",
+    //Juli
+    "2024-07-07",
+    //Agustus
+    "2024-08-17",
+    "2024-08-18",
+    //September
+    "2024-09-16",
+    //Desember
+    "2024-12-25",
+    "2024-12-26",
+  ];
+
   const [formData, setLocalFormData] = useState({
+    nama: decodeURIComponent(nama),
+    unitKerja: decodeURIComponent(unitKerja),
+    jumlahCutiTahunan: decodeURIComponent(jumlahCutiTahunan),
+    noSurat: "",
     leaveType: "",
     message: "",
     leaveDays: "",
     startDate: "",
     endDate: "",
+    jabatan: "",
+    nip: "",
+    masaKerja: "",
+    alamatLengkap: "",
+    noTelpon: "",
     confirm: false,
-    nama: decodeURIComponent(nama),
-    nip: decodeURIComponent(nip),
-    jabatan: decodeURIComponent(jabatan),
-    masaKerja: decodeURIComponent(masaKerja),
-    unitKerja: decodeURIComponent(unitKerja),
-    alamat: decodeURIComponent(alamat),
-    noTelp: decodeURIComponent(noTelp),
-    jumlahCutiTahunan: decodeURIComponent(jumlahCutiTahunan),
   });
 
   const [remainingAnnualLeave, setRemainingAnnualLeave] = useState(
     decodeURIComponent(jumlahCutiTahunan)
   );
-
   const [editableLeaveDays, setEditableLeaveDays] = useState("");
   const [editableEndDate, setEditableEndDate] = useState("");
 
@@ -55,14 +62,18 @@ const FormPengajuanCuti = ({ setFormData }) => {
         alert("Tanggal selesai tidak boleh sebelum tanggal mulai");
         return;
       }
-      const diffTime = Math.abs(endDate - startDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // Menghitung jumlah hari cuti yang sebenarnya
+      const actualLeaveDays = calculateActualLeaveDays(
+        startDate,
+        endDate,
+        tanggalMerah
+      );
       setLocalFormData({
         ...formData,
         [name]: value,
-        leaveDays: diffDays.toString(),
+        leaveDays: actualLeaveDays.toString(),
       });
-      setEditableLeaveDays(diffDays.toString());
+      setEditableLeaveDays(actualLeaveDays.toString());
       setEditableEndDate(value);
     } else {
       setLocalFormData({
@@ -72,15 +83,41 @@ const FormPengajuanCuti = ({ setFormData }) => {
     }
   };
 
+  // Fungsi utilitas untuk menghitung jumlah hari cuti yang sebenarnya
+  const calculateActualLeaveDays = (startDate, endDate, tanggalMerah) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    let count = 0;
+
+    // Loop melalui setiap hari di rentang tanggal
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      // Periksa apakah hari tersebut bukan hari libur
+      if (
+        d.getDay() !== 0 && // Minggu
+        d.getDay() !== 6 && // Sabtu
+        !tanggalMerah.includes(d.toISOString().split("T")[0]) // Tanggal merah
+      ) {
+        count++;
+      }
+    }
+    return count;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
+      formData.noSurat &&
       formData.leaveType &&
       formData.message &&
       formData.leaveDays &&
       formData.startDate &&
       formData.endDate &&
-      formData.confirm
+      formData.confirm &&
+      formData.jabatan &&
+      formData.nip &&
+      formData.masaKerja &&
+      formData.alamatLengkap &&
+      formData.noTelpon
     ) {
       let newRemainingAnnualLeave = remainingAnnualLeave;
       if (formData.leaveType === "Cuti Tahunan") {
@@ -111,8 +148,14 @@ const FormPengajuanCuti = ({ setFormData }) => {
     }
   };
 
+  const handleNumericInput = (e) => {
+    if (!/^\d*$/.test(e.key)) {
+      e.preventDefault();
+    }
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen flex justify-center items-center font-Poppins">
+    <div className="bg-gray-100 min-h-screen flex justify-center items-center font-Poppins py-16">
       <div className="bg-white w-full md:w-3/4 lg:w-1/2 xl:w-1/3 rounded-lg shadow-md p-8">
         <h1 className="text-2xl font-bold mb-4 text-center">
           Form Cuti Karyawan
@@ -130,7 +173,118 @@ const FormPengajuanCuti = ({ setFormData }) => {
               </span>
             </p>
           </div>
-
+          <div className="mb-4">
+            <label
+              htmlFor="jabatan"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Nomor Surat
+            </label>
+            <input
+              type="text"
+              id="noSurat"
+              name="noSurat"
+              className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
+              value={formData.noSurat}
+              onChange={handleChange}
+              placeholder="Masukkan Nomor Surat Anda"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="jabatan"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Jabatan
+            </label>
+            <input
+              type="text"
+              id="jabatan"
+              name="jabatan"
+              className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
+              value={formData.jabatan}
+              onChange={handleChange}
+              placeholder="Masukkan Jabatan Anda"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="nip"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              NIP
+            </label>
+            <input
+              type="text"
+              id="nip"
+              name="nip"
+              className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
+              value={formData.nip}
+              onChange={handleChange}
+              pattern="\d*"
+              onKeyPress={handleNumericInput}
+              placeholder="Masukkan NIP Anda"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="masaKerja"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Masa Kerja
+            </label>
+            <input
+              type="text"
+              id="masaKerja"
+              name="masaKerja"
+              className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
+              value={formData.masaKerja}
+              onChange={handleChange}
+              placeholder="Masukkan Masa Kerja Anda"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="alamatLengkap"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Alamat Lengkap
+            </label>
+            <textarea
+              id="alamatLengkap"
+              name="alamatLengkap"
+              className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
+              rows="2"
+              value={formData.alamatLengkap}
+              onChange={handleChange}
+              placeholder="Masukkan Alamat Lengkap Anda"
+              required
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="noTelpon"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              No Telpon
+            </label>
+            <input
+              type="text"
+              id="noTelpon"
+              name="noTelpon"
+              className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
+              value={formData.noTelpon}
+              onChange={handleChange}
+              pattern="\d*"
+              onKeyPress={handleNumericInput}
+              placeholder="Masukkan Nomor Telepon Anda"
+              required
+            />
+          </div>
           <div className="mb-4">
             <label
               htmlFor="leaveType"
@@ -175,6 +329,7 @@ const FormPengajuanCuti = ({ setFormData }) => {
               rows="2"
               value={formData.message}
               onChange={handleChange}
+              placeholder="Masukkan Alasan Cuti Anda"
               required
             ></textarea>
           </div>
@@ -229,6 +384,7 @@ const FormPengajuanCuti = ({ setFormData }) => {
               className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
               value={editableLeaveDays}
               onChange={(e) => setEditableLeaveDays(e.target.value)}
+              placeholder="Sesuaikan Lama Cuti jika diperlukan"
               required
             />
           </div>

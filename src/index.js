@@ -17,7 +17,7 @@ const Root = () => {
           <Route path="/" element={<TablePegawai />} />
           <Route path="/form" element={<FormPengajuanCuti />} />
           <Route
-            path="/form/:nama/:nip/:jabatan/:masaKerja/:unitKerja/:alamat/:noTelp/:jumlahCutiTahunan"
+            path="/form/:nama/:unitKerja/:jumlahCutiTahunan"
             element={<FormPengajuanCuti setFormData={setFormData} />}
           />
           <Route

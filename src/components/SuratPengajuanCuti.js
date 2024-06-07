@@ -1,5 +1,13 @@
-import React from "react";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import React, { useState, useEffect } from "react";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  Image,
+} from "@react-pdf/renderer";
+import checkmarkImage from "../images/checkmark.png";
 
 const styles = StyleSheet.create({
   page: {
@@ -13,13 +21,16 @@ const styles = StyleSheet.create({
   },
   address: {
     fontSize: 9,
-    textAlign: "right",
+    textAlign: "left",
     marginBottom: 4,
+    position: "absolute",
+    right: 0,
   },
   title: {
     fontSize: 14,
     textAlign: "center",
     marginBottom: 5,
+    paddingTop: 57,
   },
   SubHeading: {
     fontSize: 11,
@@ -227,9 +238,40 @@ const styles = StyleSheet.create({
     fontSize: 7,
     alignItems: "flex-end",
   },
+  checkmark: {
+    width: 8,
+    height: 8,
+    backgroundColor: "transparent",
+  },
 });
 
 const SuratPengajuanCuti = ({ formData }) => {
+  const [bulanSurat, setBulanSurat] = useState("");
+  const [tahunSurat, setTahunSurat] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    const months = [
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "VIII",
+      "IX",
+      "X",
+      "XI",
+      "XII",
+    ];
+    const today = new Date();
+    const monthIndex = today.getMonth();
+    setBulanSurat(months[monthIndex]);
+
+    const year = today.getFullYear();
+    setTahunSurat(year);
+  }, []);
+
   const getCurrentDate = () => {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
@@ -237,6 +279,11 @@ const SuratPengajuanCuti = ({ formData }) => {
     const yyyy = today.getFullYear();
 
     return `${dd}/${mm}/${yyyy}`;
+  };
+
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    return new Date(dateString).toLocaleDateString("id-ID", options);
   };
 
   return (
@@ -247,7 +294,7 @@ const SuratPengajuanCuti = ({ formData }) => {
           <View style={styles.address}>
             <Text>Aceh Besar, {getCurrentDate()}</Text>
             <Text>Kepada</Text>
-            <Text>Yth. Kepala Statisuin Klimatologi Aceh</Text>
+            <Text>Yth. Kepala Stasiun Klimatologi Aceh</Text>
             <Text>di</Text>
             <Text>Aceh Besar</Text>
           </View>
@@ -257,7 +304,8 @@ const SuratPengajuanCuti = ({ formData }) => {
             FORMULIR PERMINTAAN DAN PEMBERIAN CUTI
           </Text>
           <Text style={styles.SubHeading}>
-            Nomor: KP.05.02/ 155/KACB/IV/2024
+            Nomor: {formData.noSurat}/ {formData.kodeSurat} /KACB /{bulanSurat} 
+            /{tahunSurat}
           </Text>
 
           {/* Table for Data Pegawai */}
@@ -315,7 +363,7 @@ const SuratPengajuanCuti = ({ formData }) => {
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue2}>
                     {formData.leaveType === "Cuti Tahunan" && (
-                      <Text style={styles.tableRowValue2}>!</Text>
+                      <Image src={checkmarkImage} style={styles.checkmark} />
                     )}
                   </Text>
                   <View style={styles.tableRowDivider} />
@@ -324,9 +372,8 @@ const SuratPengajuanCuti = ({ formData }) => {
                   <Text style={styles.tableRowLabel2}>3. Cuti Sakit </Text>
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue2}>
-                    {" "}
                     {formData.leaveType === "Cuti Sakit" && (
-                      <Text style={styles.tableRowValue2}>!</Text>
+                      <Image src={checkmarkImage} style={styles.checkmark} />
                     )}
                   </Text>
                   <View style={styles.tableRowDivider} />
@@ -337,9 +384,8 @@ const SuratPengajuanCuti = ({ formData }) => {
                   </Text>
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue2}>
-                    {" "}
                     {formData.leaveType === "Cuti Karena Alasan Penting" && (
-                      <Text style={styles.tableRowValue2}>!</Text>
+                      <Image src={checkmarkImage} style={styles.checkmark} />
                     )}
                   </Text>
                   <View style={styles.tableRowDivider} />
@@ -351,9 +397,8 @@ const SuratPengajuanCuti = ({ formData }) => {
                   <Text style={styles.tableRowLabel2}> 2. Cuti Besar </Text>
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue2}>
-                    {" "}
                     {formData.leaveType === "Cuti Besar" && (
-                      <Text style={styles.tableRowValue2}>!</Text>
+                      <Image src={checkmarkImage} style={styles.checkmark} />
                     )}
                   </Text>
                 </View>
@@ -361,9 +406,8 @@ const SuratPengajuanCuti = ({ formData }) => {
                   <Text style={styles.tableRowLabel2}>4. Cuti Melahirkan</Text>
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue2}>
-                    {" "}
                     {formData.leaveType === "Cuti Melahirkan" && (
-                      <Text style={styles.tableRowValue2}>!</Text>
+                      <Image src={checkmarkImage} style={styles.checkmark} />
                     )}
                   </Text>
                 </View>
@@ -373,10 +417,9 @@ const SuratPengajuanCuti = ({ formData }) => {
                   </Text>
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue2}>
-                    {" "}
                     {formData.leaveType ===
                       "Cuti di Luar Tanggungan Negara" && (
-                      <Text style={styles.tableRowValue2}>!</Text>
+                      <Image src={checkmarkImage} style={styles.checkmark} />
                     )}
                   </Text>
                 </View>
@@ -412,7 +455,7 @@ const SuratPengajuanCuti = ({ formData }) => {
                   <Text style={styles.tableRowLabel4}>Mulai Tanggal</Text>
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue4}>
-                    {formData.startDate}
+                    {formatDate(formData.startDate)}
                   </Text>
                   <View style={styles.tableRowDivider} />
                 </View>
@@ -422,7 +465,9 @@ const SuratPengajuanCuti = ({ formData }) => {
                 <View style={styles.tableRowContainer}>
                   <Text style={styles.tableRowLabel4}>s/d</Text>
                   <View style={styles.tableRowDivider} />
-                  <Text style={styles.tableRowValue4}>{formData.endDate}</Text>
+                  <Text style={styles.tableRowValue4}>
+                    {formatDate(formData.endDate)}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -522,7 +567,9 @@ const SuratPengajuanCuti = ({ formData }) => {
                 </View>
 
                 <View style={styles.tableRowContainer}>
-                  <Text style={styles.tableRowValue6}>{formData.alamat}</Text>
+                  <Text style={styles.tableRowValue6}>
+                    {formData.alamatLengkap}
+                  </Text>
                   <View style={styles.tableRowDivider} />
                 </View>
               </View>
@@ -534,7 +581,7 @@ const SuratPengajuanCuti = ({ formData }) => {
                 </View>
 
                 <View style={styles.tableRowContainer}>
-                  <Text style={styles.tableRowValue6}>{formData.noTelp}</Text>
+                  <Text style={styles.tableRowValue6}>{formData.noTelpon}</Text>
                   <View style={styles.tableRowDivider} />
                 </View>
               </View>
@@ -611,14 +658,14 @@ const SuratPengajuanCuti = ({ formData }) => {
               <View style={styles.column}>
                 <View style={styles.tableRowContainer}>
                   <Text style={styles.tableRowLabel77}>
-                    Kepala Statisuin Klimatologi Aceh
+                    Kepala Stasiun Klimatologi Aceh
                   </Text>
                 </View>
 
                 <View style={styles.tableRowContainer7}>
                   <Text style={styles.tableRowValue777}>(Muhajir,M.Si)</Text>
                   <Text style={styles.tableRowValue7777}>
-                    NIP. 198503072006042003
+                    NIP. 198409192007011010
                   </Text>
                 </View>
               </View>
@@ -682,14 +729,14 @@ const SuratPengajuanCuti = ({ formData }) => {
               <View style={styles.column}>
                 <View style={styles.tableRowContainer}>
                   <Text style={styles.tableRowLabel77}>
-                    Kepala Statisuin Klimatologi Aceh
+                    Kepala Stasiun Klimatologi Aceh
                   </Text>
                 </View>
 
                 <View style={styles.tableRowContainer7}>
                   <Text style={styles.tableRowValue777}>(Muhajir,M.Si)</Text>
                   <Text style={styles.tableRowValue7777}>
-                    NIP. 198503072006042003
+                    NIP. 198409192007011010
                   </Text>
                 </View>
               </View>
@@ -706,7 +753,8 @@ const SuratPengajuanCuti = ({ formData }) => {
             <Text>
               ** {"\u00A0"}
               {"\u00A0"} {"\u00A0"} {"\u00A0"} Pilih salah satu dengan memberi
-              tanda centang ( )
+              tanda centang ({" "}
+              <Image src={checkmarkImage} style={styles.checkmark} /> )
             </Text>
             <Text>
               *** {"\u00A0"} {"\u00A0"}

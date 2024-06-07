@@ -11,6 +11,7 @@ const DetailPengajuanCuti = () => {
   const [formData] = useState(
     state?.formData || JSON.parse(localStorage.getItem("formData"))
   );
+  const [kodeSurat, setKodeSurat] = useState(155);
 
   useEffect(() => {
     if (state?.formData) {
@@ -21,6 +22,11 @@ const DetailPengajuanCuti = () => {
   if (!formData) {
     return <div className="text-center mt-8">No data available</div>;
   }
+
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    return new Date(dateString).toLocaleDateString("id-ID", options);
+  };
 
   const handleBack = () => {
     const updatedFormData = {
@@ -33,10 +39,12 @@ const DetailPengajuanCuti = () => {
     navigate("/", { state: { updatedFormData } });
   };
 
+  const incrementKodeSurat = () => {
+    setKodeSurat((prevKodeSurat) => prevKodeSurat + 1);
+  };
+
   return (
-    <div className="bg-gray-100 min-h-screen font-Poppins my-auto
-    
-    ">
+    <div className="bg-gray-100 min-h-screen font-Poppins my-auto">
       <h1 className="text-3xl font-bold text-center mb-8 pt-8">
         Detail Pengajuan Cuti
       </h1>
@@ -45,6 +53,24 @@ const DetailPengajuanCuti = () => {
           {/* Menampilkan data pengajuan cuti */}
           <p className="text-lg font-semibold mb-2">Nama:</p>
           <p className="mb-4">{formData.nama}</p>
+
+          <p className="text-lg font-semibold mb-2">NIP:</p>
+          <p className="mb-4">{formData.nip}</p>
+
+          <p className="text-lg font-semibold mb-2">No Surat:</p>
+          <p className="mb-4">{formData.noSurat}</p>
+
+          <p className="text-lg font-semibold mb-2">Jabatan:</p>
+          <p className="mb-4">{formData.jabatan}</p>
+
+          <p className="text-lg font-semibold mb-2">Masa kerja:</p>
+          <p className="mb-4">{formData.masaKerja}</p>
+
+          <p className="text-lg font-semibold mb-2">Alamat lengkap:</p>
+          <p className="mb-4">{formData.alamatLengkap}</p>
+
+          <p className="text-lg font-semibold mb-2">No Telpon:</p>
+          <p className="mb-4">{formData.noTelpon}</p>
 
           <p className="text-lg font-semibold mb-2">Jenis Cuti:</p>
           <p className="mb-4">{formData.leaveType}</p>
@@ -56,16 +82,20 @@ const DetailPengajuanCuti = () => {
           <p className="mb-4">{formData.leaveDays}</p>
 
           <p className="text-lg font-semibold mb-2">Tanggal Mulai:</p>
-          <p className="mb-4">{formData.startDate}</p>
+          <p className="mb-4">{formatDate(formData.startDate)}</p>
 
           <p className="text-lg font-semibold mb-2">Tanggal Selesai:</p>
-          <p className="mb-4">{formData.endDate}</p>
+          <p className="mb-4">{formatDate(formData.endDate)}</p>
 
           <p className="text-lg font-semibold mb-2">Sisa Cuti Tahunan:</p>
           <p className="mb-4">{formData.remainingAnnualLeave}</p>
 
           {/* Tombol Print PDF dan Download PDF */}
-          <BlobProvider document={<SuratPengajuanCuti formData={formData} />}>
+          <BlobProvider
+            document={
+              <SuratPengajuanCuti formData={{ ...formData, kodeSurat }} />
+            }
+          >
             {({ blob, url }) => (
               <div className="flex justify-center space-x-4 mb-4">
                 <a
@@ -73,12 +103,16 @@ const DetailPengajuanCuti = () => {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={incrementKodeSurat}
                 >
                   <IoPrintOutline className="w-5 h-5 mr-1" /> Print PDF
                 </a>
                 <button
                   className="flex items-center justify-center py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-                  onClick={() => saveAs(blob, "cutiku.pdf")}
+                  onClick={() => {
+                    saveAs(blob, "cutiku.pdf");
+                    incrementKodeSurat();
+                  }}
                 >
                   <IoDownloadOutline className="w-5 h-5 mr-1" /> Download PDF
                 </button>
@@ -87,14 +121,14 @@ const DetailPengajuanCuti = () => {
           </BlobProvider>
         </div>
       </div>
-      
+
       <div className="flex items-center justify-center">
-      <button
-        onClick={handleBack}
-        className="my-6 py-2 px-8 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
-      >
-        Done
-      </button>
+        <button
+          onClick={handleBack}
+          className="my-6 py-2 px-8 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+        >
+          Done
+        </button>
       </div>
     </div>
   );
