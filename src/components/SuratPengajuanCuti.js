@@ -272,6 +272,14 @@ const SuratPengajuanCuti = ({ formData }) => {
     setTahunSurat(year);
   }, []);
 
+  const TahunSebelumnya = () => {
+    return new Date().getFullYear() - 1;
+  };
+
+  const DuaTahunSebelumnya = () => {
+    return new Date().getFullYear() - 2;
+  };
+
   const getCurrentDate = () => {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
@@ -304,8 +312,8 @@ const SuratPengajuanCuti = ({ formData }) => {
             FORMULIR PERMINTAAN DAN PEMBERIAN CUTI
           </Text>
           <Text style={styles.SubHeading}>
-            Nomor: {formData.noSurat}/ {formData.kodeSurat} /KACB /{bulanSurat} 
-            /{tahunSurat}
+            Nomor: {formData.noSurat}/ {formData.kodeSurat} /KACB /{bulanSurat}/
+            {tahunSurat}
           </Text>
 
           {/* Table for Data Pegawai */}
@@ -497,7 +505,9 @@ const SuratPengajuanCuti = ({ formData }) => {
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue5}>0 Hari</Text>
                   <View style={styles.tableRowDivider} />
-                  <Text style={styles.tableRowValue5}>Tahun 2022</Text>
+                  <Text style={styles.tableRowValue5}>
+                    Tahun {DuaTahunSebelumnya()}
+                  </Text>
                   <View style={styles.tableRowDivider} />
                 </View>
                 <View style={styles.tableRowContainer}>
@@ -505,7 +515,9 @@ const SuratPengajuanCuti = ({ formData }) => {
                   <View style={styles.tableRowDivider} />
                   <Text style={styles.tableRowValue5}>0 Hari</Text>
                   <View style={styles.tableRowDivider} />
-                  <Text style={styles.tableRowValue5}>Tahun 2023</Text>
+                  <Text style={styles.tableRowValue5}>
+                    Tahun {TahunSebelumnya()}
+                  </Text>
                   <View style={styles.tableRowDivider} />
                 </View>
                 <View style={styles.tableRowContainer}>
@@ -515,7 +527,7 @@ const SuratPengajuanCuti = ({ formData }) => {
                     {formData.remainingAnnualLeave} Hari
                   </Text>
                   <View style={styles.tableRowDivider} />
-                  <Text style={styles.tableRowValue5}>Tahun 2024</Text>
+                  <Text style={styles.tableRowValue5}>Tahun {tahunSurat}</Text>
                   <View style={styles.tableRowDivider} />
                 </View>
               </View>
