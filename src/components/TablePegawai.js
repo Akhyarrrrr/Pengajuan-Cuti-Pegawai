@@ -10,97 +10,116 @@ const TablePegawai = () => {
     {
       nama: "EKO CAHYO PRISTIWANTORO,SP,M.Si",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
 
     {
       nama: "MUHAJIR",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "SUTARNI",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "NIZAR PURNAMA",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "PUTRI MEINELVA, S.Tr",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "ENDANG PAMULATSIH, S.Tr",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "FITROHIM, S.Tr",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "MOH. RIZAL",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "RAHMAH WULAN, SST",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "DEA RIMASILANA, S.Tr",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "HARISA BILHAQQI QALBI, S.Si",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "MUHAMMAD IRFAN ISLAMI, S.Tr",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "NENGAH BENNUWARDANA, ST",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "ADZANI PUTRI WIDOWATI",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "AYUSRI WIJAYA PUTRI",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "KHAIRUL AKHYAR, A.Md",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "MUHAMMAD AGI WARDHANA",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "NUR IRFAN WICAKSONO",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
     {
       nama: "NASRAH FUADI, A.Ma",
       unitKerja: "Stasiun Klimatologi Aceh",
+      nip: "198303132008121001",
       jumlahCutiTahunan: 12,
     },
   ];
@@ -125,15 +144,13 @@ const TablePegawai = () => {
     }
   }, [location.state, users]);
 
-  const handleAjukanCuti = (
-    nama,
-    unitKerja,
-    jumlahCutiTahunan
-  ) => {
+  const handleAjukanCuti = (nama, nip, unitKerja, jumlahCutiTahunan) => {
     navigate(
       `/form/${encodeURIComponent(nama)}/${encodeURIComponent(
-        unitKerja
-      )}/${encodeURIComponent(jumlahCutiTahunan)}`
+        nip
+      )}/${encodeURIComponent(unitKerja)}/${encodeURIComponent(
+        jumlahCutiTahunan
+      )}`
     );
   };
 
@@ -149,7 +166,7 @@ const TablePegawai = () => {
             <tr>
               <th className="py-3 px-6 text-left font-semibold">No.</th>
               <th className="py-3 px-6 text-left font-semibold">Nama</th>
-              <th className="py-3 px-6 text-left font-semibold">Unit Kerja</th>
+              <th className="py-3 px-6 text-left font-semibold">NIP</th>
               <th className="py-3 px-6 text-center font-semibold">
                 Sisa Cuti Tahunan
               </th>
@@ -167,7 +184,7 @@ const TablePegawai = () => {
               >
                 <td className="py-4 px-6">{index + 1}</td>
                 <td className="py-4 px-6">{user.nama}</td>
-                <td className="py-4 px-6">{user.unitKerja}</td>
+                <td className="py-4 px-6">{user.nip}</td>
                 <td className="py-4 px-6 text-center">
                   {user.jumlahCutiTahunan} Hari
                 </td>
@@ -176,6 +193,7 @@ const TablePegawai = () => {
                     onClick={() =>
                       handleAjukanCuti(
                         user.nama,
+                        user.nip,
                         user.unitKerja,
                         user.jumlahCutiTahunan
                       )

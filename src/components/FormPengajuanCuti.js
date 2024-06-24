@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const FormPengajuanCuti = ({ setFormData }) => {
-  const { nama, unitKerja, jumlahCutiTahunan } = useParams();
+  const { nama, unitKerja, nip, jumlahCutiTahunan } = useParams();
   const navigate = useNavigate();
 
   // Daftar tanggal merah atau hari libur
@@ -26,6 +26,7 @@ const FormPengajuanCuti = ({ setFormData }) => {
     nama: decodeURIComponent(nama),
     unitKerja: decodeURIComponent(unitKerja),
     jumlahCutiTahunan: decodeURIComponent(jumlahCutiTahunan),
+    nip: decodeURIComponent(nip),
     noSurat: "",
     leaveType: "",
     message: "",
@@ -33,10 +34,10 @@ const FormPengajuanCuti = ({ setFormData }) => {
     startDate: "",
     endDate: "",
     jabatan: "",
-    nip: "",
     masaKerja: "",
     alamatLengkap: "",
     noTelpon: "",
+    tglSurat: "",
     confirm: false,
   });
 
@@ -117,7 +118,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
       formData.nip &&
       formData.masaKerja &&
       formData.alamatLengkap &&
-      formData.noTelpon
+      formData.noTelpon &&
+      formData.tglSurat
     ) {
       let newRemainingAnnualLeave = remainingAnnualLeave;
       if (formData.leaveType === "Cuti Tahunan") {
@@ -158,8 +160,10 @@ const FormPengajuanCuti = ({ setFormData }) => {
     <div className="bg-gray-100 min-h-screen flex justify-center items-center font-Poppins py-16">
       <div className="bg-white w-full md:w-3/4 lg:w-1/2 xl:w-1/3 rounded-lg shadow-md p-8">
         <h1 className="text-2xl font-bold mb-4 text-center">
-          Form Cuti Karyawan
+          Form Cuti Pegawai
         </h1>
+
+        {/* Start of Form */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4 text-gray-700 font-medium">
             Halo{" "}
@@ -173,6 +177,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               </span>
             </p>
           </div>
+
+          {/* Nomor Surat */}
           <div className="mb-4">
             <label
               htmlFor="jabatan"
@@ -191,6 +197,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               required
             />
           </div>
+
+          {/* Jabatan */}
           <div className="mb-4">
             <label
               htmlFor="jabatan"
@@ -209,26 +217,28 @@ const FormPengajuanCuti = ({ setFormData }) => {
               required
             />
           </div>
+
+          {/* Tanggal Surat */}
           <div className="mb-4">
             <label
-              htmlFor="nip"
+              htmlFor="tglSurat"
               className="block text-gray-700 font-medium mb-2"
             >
-              NIP
+              Tanggal Surat
             </label>
             <input
               type="text"
-              id="nip"
-              name="nip"
+              id="tglSurat"
+              name="tglSurat"
               className="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
-              value={formData.nip}
+              value={formData.tglSurat}
               onChange={handleChange}
-              pattern="\d*"
-              onKeyPress={handleNumericInput}
-              placeholder="Masukkan NIP Anda"
+              placeholder="Masukkan Tanggal Surat Anda"
               required
             />
           </div>
+
+          {/* Masa Kerja */}
           <div className="mb-4">
             <label
               htmlFor="masaKerja"
@@ -247,6 +257,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               required
             />
           </div>
+
+          {/* Alamat Lengkap */}
           <div className="mb-4">
             <label
               htmlFor="alamatLengkap"
@@ -265,6 +277,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               required
             ></textarea>
           </div>
+
+          {/* No Telpon */}
           <div className="mb-4">
             <label
               htmlFor="noTelpon"
@@ -285,6 +299,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               required
             />
           </div>
+
+          {/* Jenis Cuti */}
           <div className="mb-4">
             <label
               htmlFor="leaveType"
@@ -315,6 +331,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               </option>
             </select>
           </div>
+
+          {/* Alasan Cuti */}
           <div className="mb-4">
             <label
               htmlFor="message"
@@ -333,6 +351,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               required
             ></textarea>
           </div>
+
+          {/* Tanggal Mulai dan Selesai */}
           <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label
@@ -370,6 +390,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               />
             </div>
           </div>
+
+          {/* Lamanya Cuti (Hari) */}
           <div className="mb-4">
             <label
               htmlFor="leaveDays"
@@ -388,6 +410,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               required
             />
           </div>
+
+          {/* Konfirmasi */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">
               Apakah Anda sudah mengisi data di atas dengan benar?
@@ -405,6 +429,8 @@ const FormPengajuanCuti = ({ setFormData }) => {
               Ya
             </label>
           </div>
+
+          {/* Submit Button */}
           <div className="flex justify-center mt-6">
             <button
               type="submit"
@@ -414,6 +440,7 @@ const FormPengajuanCuti = ({ setFormData }) => {
             </button>
           </div>
         </form>
+        {/* End of Form */}
       </div>
     </div>
   );
